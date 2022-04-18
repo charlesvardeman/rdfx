@@ -6,7 +6,7 @@ from typing import List
 
 import rdflib
 
-from rdfx import File, PersistenceSystem, prepare_files_list
+from .persistence_systems import File, PersistenceSystem, prepare_files_list
 from rdflib import Graph, util
 import re
 
@@ -40,7 +40,8 @@ def get_input_format(file_path):
             input_format = "json-ld"
         else:
             raise Exception(
-                "ERROR: Cannot guess the RDF format of input file {}".format(file_path)
+                "ERROR: Cannot guess the RDF format of input file {}".format(
+                    file_path)
             )
 
     return input_format
@@ -52,7 +53,8 @@ def make_output_file_path(input_file_path, input_format, output_format, in_place
     if input_format == output_format and not in_place:
         output_file_name += ".new"
 
-    output_file_name = output_file_name + "." + OUTPUT_FILE_ENDINGS.get(output_format)
+    output_file_name = output_file_name + "." + \
+        OUTPUT_FILE_ENDINGS.get(output_format)
 
     output_path = input_file_path.parent / output_file_name
     print("output file: {}".format(output_path))
@@ -69,7 +71,8 @@ def convert(
     input_format = get_input_format(input_file_path)
     output_file_path = input_file_path.parent
     g = Graph().parse(str(input_file_path), format=input_format)
-    persistence_system.write(g, output_filename, output_format, comments,output_file_path)
+    persistence_system.write(
+        g, output_filename, output_format, comments, output_file_path)
 
 
 def merge(
@@ -92,7 +95,8 @@ def merge(
     g = Graph()
     for f in rdf_files:
         g.parse(f, format=RDF_FILE_ENDINGS[f.suffix.lstrip(".")])
-    persistence_system.write(g, output_filename, output_format, leading_comments)
+    persistence_system.write(
+        g, output_filename, output_format, leading_comments)
 
 
 def persist_to(persistence_system: PersistenceSystem, g: Graph):
@@ -104,7 +108,9 @@ def persist_to(persistence_system: PersistenceSystem, g: Graph):
         persistence_system.write(g)
 
 # removes unused namespace entries and re-serializes a graph with the prefixes in sorted order
-def clean_ttl(input_file_path:Path):
+
+
+def clean_ttl(input_file_path: Path):
     g = Graph()
     g.parse(input_file_path)
     all_ns = [n for n in g.namespaces()]

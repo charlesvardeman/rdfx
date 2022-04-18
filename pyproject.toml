@@ -26,6 +26,47 @@ pytest-asyncio = "^0.16.0"
 [tool.poetry.extras]
 app = ["streamlit", "python-dotenv"]
 
+
+[tool.pdm]
+includes = []
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest<7.0.0,>=6.2.5",
+    "moto<3.0.0,>=2.2.9",
+    "pytest-asyncio<1.0.0,>=0.16.0",
+]
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
+
+
+[project]
+# PEP 621 project metadata
+# See https://www.python.org/dev/peps/pep-0621/
+authors = [
+    {name = "david-habgood", email = "david.habgood@surroundaustralia.com"},
+    {name = "nicholas-car", email = "nicholas.car@surroundaustralia.com"},
+    {name = "adam-davis", email = "adam.davis@surroundaustralia.com"},
+]
+maintainers = [
+    {name = "adam-davis", email = "adam.davis@surroundaustralia.com"},
+]
+license-expression = "BSD-3-Clause"
+requires-python = ">=3.8,<4.0"
+dependencies = [
+    "rdflib<7.0.0,>=6.0.2",
+    "requests<3.0.0,>=2.26.0",
+    "httpx<1.0.0,>=0.20.0",
+    "boto3<2.0.0,>=1.20.20",
+]
+name = "rdfx"
+version = "0.4.4"
+description = "Tools for converting, merging, persisting and reading RDF data in different formats."
+readme = "README.md"
+keywords = ["RDF", "Linked Data", "Turtle", "N-Triples", "Semantic Web", "RDFLib"]
+
+[project.urls]
+repository = "https://github.com/surroundaustralia/rdfx"
+
+[project.optional-dependencies]
+app = ["streamlit<2.0.0,>=1.2.0", "python-dotenv<1.0.0,>=0.19.2"]

@@ -1,13 +1,12 @@
+from rdfx import convert
+from rdfx.persistence_systems import File
+from pathlib import Path
+from io import StringIO
+import warnings
 import os
 import sys
 
 sys.path.append(os.getcwd() + "/rdfx")
-import warnings
-from io import StringIO
-from pathlib import Path
-
-from rdfx.persistence_systems import File
-from rdfx.rdfx import convert
 
 
 def test_ttl_nt():
@@ -24,7 +23,8 @@ def test_ttl_nt():
     output_file = input_file.parent / Path(f"converted.{output_format}")
     ps = File(".")
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")  # ignore the rdflib NT serializer warning
+        # ignore the rdflib NT serializer warning
+        warnings.simplefilter("ignore")
         convert(input_file, ps, output_file.stem, output_format)
     # nt is unordered so must use readlines to compare
     output_lines = output_file.open().readlines()
