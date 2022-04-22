@@ -6,7 +6,7 @@ from typing import List
 
 import rdflib
 
-from .persistence_systems import File, PersistenceSystem, prepare_files_list
+from rdfx.persistence_systems import File, PersistenceSystem, prepare_files_list
 from rdflib import Graph, util
 import re
 

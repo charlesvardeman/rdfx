@@ -90,7 +90,8 @@ class PersistenceSystem(ABC):
         if leading_comments is None:
             return g.serialize(format=rdf_format)
         else:
-            PersistenceSystem.leading_comment_validator(leading_comments, rdf_format)
+            PersistenceSystem.leading_comment_validator(
+                leading_comments, rdf_format)
             s = ""
             for lc in leading_comments:
                 s += f"# {lc}\n"
@@ -301,7 +302,8 @@ class S3(PersistenceSystem):
             "region_name": self.region,
         }
         client = boto3.client(*args, **kwargs)
-        response = client.put_object(Body=bytes_obj, Bucket=self.bucket, Key=filename)
+        response = client.put_object(
+            Body=bytes_obj, Bucket=self.bucket, Key=filename)
         if response["ResponseMetadata"]["HTTPStatusCode"] == HTTPStatus.OK:
             return filename
         else:
@@ -335,7 +337,8 @@ class GraphDB(PersistenceSystem):
             )
 
         if repo_id is None:
-            raise ValueError(f"The value you supplied for repo_id cannot be None")
+            raise ValueError(
+                f"The value you supplied for repo_id cannot be None")
 
         self.location = location
         self.repo_id = repo_id
@@ -381,7 +384,8 @@ class Fuseki(PersistenceSystem):
             )
 
         if repo_id is None:
-            raise ValueError(f"The value you supplied for repo_id cannot be None")
+            raise ValueError(
+                f"The value you supplied for repo_id cannot be None")
 
         self.location = location
         self.repo_id = repo_id
@@ -530,7 +534,8 @@ class SOP(PersistenceSystem):
                     "serialization": "http://topbraid.org/sparqlmotionlib#Turtle",
                     "tag": self.tag_from_workflow(graph_iri),
                 }
-            response = self.client.get(self.location + "/sparqlmotion", params=params)
+            response = self.client.get(
+                self.location + "/sparqlmotion", params=params)
 
         text = StringIO(response.text)
         leading_comments = []
@@ -573,7 +578,8 @@ class SOP(PersistenceSystem):
         :return:
         """
         query = f"""SELECT (COUNT(*) as ?count) WHERE {{GRAPH <{asset_iri}> {{?s ?p ?o}} }}"""
-        query_response = self.read(query, asset_iri, "application/sparql-results+json")
+        query_response = self.read(
+            query, asset_iri, "application/sparql-results+json")
         response_dict = json.loads(query_response.text)
         return int(response_dict["results"]["bindings"][0]["count"]["value"])
 
@@ -755,7 +761,8 @@ class SOP(PersistenceSystem):
             else:
                 raise ValueError(response_dict["error"])
         else:
-            raise Exception(f"Failed to create {form_data['name']} graph on SOP")
+            raise Exception(
+                f"Failed to create {form_data['name']} graph on SOP")
 
     def _close(self):
         self.client.get(self.location + "/purgeuser?app=edg")
@@ -814,7 +821,8 @@ def prepare_files_list(files: Union[str, list, Path]) -> list:
     elif isinstance(files, (list)):
         pass
     else:
-        raise ValueError("You must pass a string, pathlib Path, or list of these")
+        raise ValueError(
+            "You must pass a string, pathlib Path, or list of these")
     files_list = (
         []
     )  # [Path(file) if Path(file).is_file() else file.glob('*') for file in args.data ]
@@ -828,4 +836,5 @@ def prepare_files_list(files: Union[str, list, Path]) -> list:
     return files_list
 
 
-PERSISTENCE_SYSTEMS = {k.__name__: k for k in [String, File, SOP, GraphDB, Fuseki, S3]}
+PERSISTENCE_SYSTEMS = {k.__name__: k for k in [
+    String, File, SOP, GraphDB, Fuseki, S3]}
